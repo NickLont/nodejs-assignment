@@ -1,0 +1,36 @@
+version: '3'
+services: 
+  database: 
+    image: 'mongo'
+    container_name: 'mongo_container'
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes: 
+      - ./mongoDB/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongoDB/mongo-volume:/data/db
+    ports:
+      - '27017:27017'
+  nats:
+    image: nats
+    container_name: 'nats_container'
+    ports:
+      - "4222:4222"
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/server
+      - /server/node_modules
+    ports:
+      - "3010:3010"
+    restart: always
+    env_file: .env
+    environment:
+        - env=${ENVIRONMENT}
+    links:
+      - database
+      - nats

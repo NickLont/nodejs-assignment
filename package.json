@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-nats": "sh ./start-nats",
-    "start-broadcast": "node vehicle-data-generator/index.js"
+    "start-broadcast": "node vehicle-data-generator/index.js",
+    "start-server": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "csv-parse": "^3.2.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.7",
     "nats": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
