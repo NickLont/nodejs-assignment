@@ -1,0 +1,15 @@
+{
+  "name": "vehicle-data-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-broadcast": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^4.6.5",
+    "nats": "^1.3.2"
+  }
+}

@@ -1,0 +1,41 @@
+Arguments: 
+  /home/nick/.nvm/versions/node/v11.15.0/bin/node /home/nick/.nvm/versions/node/v11.15.0/bin/yarn
+
+PATH: 
+  /home/nick/.nvm/versions/node/v11.15.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.19.1
+
+Node version: 
+  11.15.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /home/nick/Desktop/Vericiti/nodejs-assignment/vehicle-data-generator/package.json: Unexpected token } in JSON at position 183
+      at JSON.parse (<anonymous>)
+      at /home/nick/.nvm/versions/node/v11.15.0/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/home/nick/.nvm/versions/node/v11.15.0/lib/node_modules/yarn/lib/cli.js:304:30)
+      at /home/nick/.nvm/versions/node/v11.15.0/lib/node_modules/yarn/lib/cli.js:315:13
+
+npm manifest: 
+  {
+    "name": "vehicle-data-generator",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "start-broadcast": "node vehicle-data-generator/index.js",
+    },
+    "author": "",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
