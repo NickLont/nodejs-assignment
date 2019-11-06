@@ -3,7 +3,7 @@ const app = express()
 const NATS = require('nats')
 const nats = NATS.connect("nats:4222")
 const mongoose = require('mongoose')
-require('dotenv').config({path: '.env'})
+require('dotenv').config({path: '../'})
 
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
