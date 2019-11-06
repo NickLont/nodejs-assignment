@@ -1,2 +1,5 @@
 mongoDB/mongo-volume
 node_modules/
+.env
+.DS_Store
+.idea/

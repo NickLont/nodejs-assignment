@@ -28,9 +28,6 @@ services:
     ports:
       - "3010:3010"
     restart: always
-    env_file: .env
-    environment:
-        - env=${ENVIRONMENT}
     links:
       - database
       - nats
