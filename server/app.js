@@ -11,10 +11,10 @@ const Vehicle = require('./models/vehicle')
 mongoose.connect(process.env.MONGO_DATABASE_URL, {useNewUrlParser: true}) // Connecting to the MongoDB database service
 mongoose.Promise = global.Promise // Tell Mongoose to use ES6 promises
 mongoose.connection.on('connected', () => {
-    console.log('Connected to database')
+  console.log('Connected to database')
 })
 mongoose.connection.on('error', (err) => {
-    console.error(`🚫 → ${err.message}`)
+  console.error(`🚫 → ${err.message}`)
 })
 
 // Subscribe to NATS and watch for keys starting with 'vehicle.'
@@ -25,43 +25,47 @@ mongoose.connection.on('error', (err) => {
 //   than the subscription subject - see "Wildcard Subscriptions".
 // - subscription id is the local id for the subscription
 nats.subscribe('vehicle.*', async (msg, subject, sid) => {
-    const sidArray = sid.split('vehicle.')
-    const vehicleName = (sidArray.length > 0 ? sidArray[1] : '')
-    const parsedMeasurements = JSON.parse(msg)
-    
-    if (parsedMeasurements.gps) {
-        parsedMeasurements.gps = parsedMeasurements.gps.split('|') // changing shape from "52.09281539916992|5.114230155944824" to [ '52.09281539916992', '5.114230155944824' ]
+  const sidArray = sid.split('vehicle.')
+  const vehicleName = (sidArray.length > 0 ? sidArray[1] : '')
+  const parsedMeasurements = JSON.parse(msg)
+
+  if (parsedMeasurements.gps) {
+    parsedMeasurements.gps = parsedMeasurements.gps.split('|') // changing shape from "52.09281539916992|5.114230155944824" to [ '52.09281539916992', '5.114230155944824' ]
+  }
+
+  const {
+    time,
+    energy,
+    gps,
+    odo,
+    speed,
+    soc
+  } = parsedMeasurements
+
+  if (vehicleName) {
+    let vehicle = await Vehicle.findOne({name: vehicleName})
+    if (!vehicle) {
+      vehicle = new Vehicle({
+        name: vehicleName
+      })
+      await vehicle.save().catch(e => {
+        console.log(`Error saving vehicle: ${vehicle}`)
+      })
     }
 
-    const {
-        time,
-        energy, 
-        gps, 
-        odo, 
-        speed, 
-        soc
-    } = parsedMeasurements
-
-    if (vehicleName) {
-        let vehicle = await Vehicle.findOne({name: vehicleName})
-        if (!vehicle) {
-            vehicle = new Vehicle({
-                name: vehicleName
-            })
-            await vehicle.save().catch(e => {console.log(`Error saving vehicle: ${vehicle}`)})
-        }
-
-        const measurements = new Measurements({
-            time,
-            energy,
-            gps,
-            odo,
-            speed,
-            soc,
-            vehicle
-        })
-        await measurements.save().catch(e => {console.log(`Error saving measurements: ${measurements}`)})
-    }
+    const measurements = new Measurements({
+      time,
+      energy,
+      gps,
+      odo,
+      speed,
+      soc,
+      vehicle
+    })
+    await measurements.save().catch(e => {
+      console.log(`Error saving measurements: ${measurements}`)
+    })
+  }
 })
 
 module.exports = app
