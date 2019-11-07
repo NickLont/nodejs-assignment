@@ -1,14 +1,16 @@
 const express = require('express')
 const app = express()
 const NATS = require('nats')
-const nats = NATS.connect("nats:4222")
+const nats = NATS.connect('nats:4222')
 const mongoose = require('mongoose')
-require('dotenv').config({path: '../'})
+require('dotenv').config({ path: '../' })
 
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
+const vehiclesStatsRoutes = require('./routes/vehicleStats')
+const measurementsStatsRoutes = require('./routes/measurementsStats')
 
-mongoose.connect(process.env.MONGO_DATABASE_URL, {useNewUrlParser: true}) // Connecting to the MongoDB database service
+mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }) // Connecting to the MongoDB database service
 mongoose.Promise = global.Promise // Tell Mongoose to use ES6 promises
 mongoose.connection.on('connected', () => {
   console.log('Connected to database')
@@ -42,8 +44,9 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
     soc
   } = parsedMeasurements
 
+  // if vehicle doesn't exist create a new one, otherwise use the existing
   if (vehicleName) {
-    let vehicle = await Vehicle.findOne({name: vehicleName})
+    let vehicle = await Vehicle.findOne({ name: vehicleName })
     if (!vehicle) {
       vehicle = new Vehicle({
         name: vehicleName
@@ -67,5 +70,16 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
     })
   }
 })
+
+// add headers to responses
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
+
+// add different routes
+app.use('/vehicles', vehiclesStatsRoutes)
+app.use('/measurements', measurementsStatsRoutes)
 
 module.exports = app
