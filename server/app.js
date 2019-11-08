@@ -7,8 +7,8 @@ require('dotenv').config({ path: '../' })
 
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
-const vehiclesStatsRoutes = require('./routes/vehicleStats')
-const measurementsStatsRoutes = require('./routes/measurementsStats')
+const vehiclesRoutes = require('./routes/vehicles')
+const measurementsRoutes = require('./routes/measurements')
 
 mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }) // Connecting to the MongoDB database service
 mongoose.Promise = global.Promise // Tell Mongoose to use ES6 promises
@@ -79,7 +79,7 @@ app.use((req, res, next) => {
 })
 
 // add different routes
-app.use('/vehicles', vehiclesStatsRoutes)
-app.use('/measurements', measurementsStatsRoutes)
+app.use('/vehicles', vehiclesRoutes)
+app.use('/measurements', measurementsRoutes)
 
 module.exports = app
