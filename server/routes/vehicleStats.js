@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const vehicleStatsController = require('../controllers/vehicleStats')
 
-router.get('/allVehicles', vehicleStatsController.allVehicles)
+router.get('/all', vehicleStatsController.allVehicles)
 
 module.exports = router
