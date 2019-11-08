@@ -11,10 +11,10 @@ RUN npm install nodemon yarn -g
 WORKDIR /server
 
 ## Copy and install packages
-COPY package.json .
-COPY yarn.lock .
+COPY --chown=node:node package.json .
+COPY --chown=node:node yarn.lock .
 RUN yarn install --silent
-COPY . .
+COPY --chown=node:node . .
 
 ## Set environment to 'development'
 ENV NODE_ENV development
