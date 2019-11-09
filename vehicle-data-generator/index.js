@@ -22,6 +22,7 @@ const NATS = require('nats')
 // After a connection is made you can start broadcasting messages (take a look at nats.publish())
 const nats = NATS.connect({ json: true })
 
+const results = []
 // This function will start reading out csv data from file and publish it on nats
 const readOutLoud = (vehicleName) => {
   // Read out meta/route.csv and turn it into readable stream
@@ -45,6 +46,7 @@ const readOutLoud = (vehicleName) => {
   return (fileStream
   // Filestream piped to csvParse which accept nodejs readablestreams and parses each line to a JSON object
     .pipe(csvParse({ delimiter: ',', columns: true, cast: true }))
+    .on('data', (data) => results.push(data))
     // Then it is piped to a writable streams that will push it into nats
     .pipe(new Writable({
       objectMode: true,
@@ -58,7 +60,6 @@ const readOutLoud = (vehicleName) => {
 
           // The first parameter on this function is topics in which data will be broadcasted
           // it also includes the vehicle name to seggregate data between different vehicle
-
           nats.publish(`vehicle.${vehicleName}`, obj, cb)
         }, Math.ceil(Math.random() * 150))
       }
@@ -75,5 +76,17 @@ console.log('Henk checks in on test-bus-1 starting his shift...')
 readOutLoud('test-bus-1')
   .once('finish', () => {
     console.log('henk is on the last stop and he is taking a cigarrete while waiting for his next trip')
+    setTimeout(() => readOutLoud2('test-bus-1'), 3000)
   })
 // To make your presentation interesting maybe you can make henk drive again in reverse
+
+const readOutLoud2 = (vehicleName) => {
+  console.log('And now he is going in reverse!')
+  results.forEach((result, i) => {
+    setTimeout(publishResult, Math.ceil(Math.random() * 150 * i), result, vehicleName, i)
+  })
+}
+const publishResult = (result, vehicleName, i) => {
+  if ((i % 100) === 0 && i !== 0) { console.log(`vehicle ${vehicleName} sent have sent ${i} messages`) }
+  nats.publish(`vehicle.test-bus-1`, result)
+}
