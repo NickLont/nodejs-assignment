@@ -1,28 +1,18 @@
 const mongoose = require('mongoose')
+const isValidId = mongoose.Types.ObjectId.isValid
 
 const Measurements = require('../models/measurements')
 const Vehicle = require('../models/vehicle')
 
-const helpers = require('../helpers')
+const isValidDate = require('../helpers').isValidDate
+const validateVehicle = require('../handlers/errorHandlers').validateVehicle
 
 exports.allMeasurements = async (req, res) => {
-  const { vehicleId, vehicleName, startDate, endDate } = req.query
+  const { startDate, endDate } = req.query
   let measurements
   let vehicle
 
-  if (!vehicleId && !vehicleName) return res.status(401).send('Please provide a vehicleId or a vehicleName')
-  if (vehicleId && vehicleName) return res.status(401).send('Please provide one of vehicleId or vehicleName')
-
-  if (vehicleId) {
-    if (!mongoose.Types.ObjectId.isValid(vehicleId)) return res.status(401).send('Invalid ID')
-
-    vehicle = await Vehicle.findById(vehicleId)
-    if (!vehicle) return res.status(401).send('No such vehicle ID found')
-  }
-  if (vehicleName) {
-    vehicle = await Vehicle.findOne({ name: vehicleName })
-    if (!vehicle) return res.status(401).send('No such vehicle name found')
-  }
+  vehicle = await validateVehicle(req, res, Vehicle, isValidId)
 
   let options = {
     vehicle: vehicle
@@ -30,16 +20,16 @@ exports.allMeasurements = async (req, res) => {
   // Conditionally creating { vehicle: vehicle, time: { $gte: new Date(1511437632000), $lt: new Date(1511437633000) }
   let time = {}
   if (startDate && endDate) {   
-    if (!helpers.isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
-    if (!helpers.isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
+    if (!isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
+    if (!isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
     time = {$gte: Number(startDate), $lt: Number(endDate)}
   }
   if (startDate && !endDate) {   
-    if (!helpers.isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
+    if (!isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
     time = {$gte: Number(startDate)}
   }
   if (!startDate && endDate) {   
-    if (!helpers.isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
+    if (!isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
     time = {$lt: Number(endDate)}
   }
   if (startDate || endDate) {
@@ -54,22 +44,10 @@ exports.allMeasurements = async (req, res) => {
 }
 
 exports.statistics = async (req, res) => {
-  const { vehicleId, vehicleName, startDate, endDate } = req.query
+  const { startDate, endDate } = req.query
   let vehicle
 
-  if (!vehicleId && !vehicleName) return res.status(401).send('Please provide a vehicleId or a vehicleName')
-  if (vehicleId && vehicleName) return res.status(401).send('Please provide one of vehicleId or vehicleName')
-
-  if (vehicleId) {
-    if (!mongoose.Types.ObjectId.isValid(vehicleId)) return res.status(401).send('Invalid ID')
-
-    vehicle = await Vehicle.findById(vehicleId)
-    if (!vehicle) return res.status(401).send('No such vehicle ID found')
-  }
-  if (vehicleName) {
-    vehicle = await Vehicle.findOne({ name: vehicleName })
-    if (!vehicle) return res.status(401).send('No such vehicle name found')
-  }
+  vehicle = await validateVehicle(req, res, Vehicle, isValidId)
 
   // Conditionally creating [
           // { vehicle: mongoose.Types.ObjectId(String(vehicle._id)) },
@@ -78,16 +56,16 @@ exports.statistics = async (req, res) => {
   const match = [{ vehicle: mongoose.Types.ObjectId(String(vehicle._id)) }]
 
   if (startDate && endDate) {   
-    if (!helpers.isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
-    if (!helpers.isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
+    if (!isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
+    if (!isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
     match.push({ time: {$gte: new Date(Number(startDate)), $lt: new Date(Number(endDate))}})
   }
   if (startDate && !endDate) {   
-    if (!helpers.isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
+    if (!isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
     match.push({ time: {$gte: new Date(Number(startDate))}})
   }
   if (!startDate && endDate) {   
-    if (!helpers.isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
+    if (!isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
     match.push({ time: {$lt: new Date(Number(endDate))}})
   }
   
