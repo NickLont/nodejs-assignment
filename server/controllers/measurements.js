@@ -8,7 +8,7 @@ const isValidDate = require('../helpers').isValidDate
 const validateVehicle = require('../handlers/errorHandlers').validateVehicle
 
 exports.allMeasurements = async (req, res) => {
-  const { startDate, endDate } = req.query
+  const { startDate, endDate, pageNo, size } = req.query
   let measurements
   let vehicle
 
@@ -17,6 +17,7 @@ exports.allMeasurements = async (req, res) => {
   let options = {
     vehicle: vehicle
   }
+
   // Conditionally creating { vehicle: vehicle, time: { $gte: new Date(1511437632000), $lt: new Date(1511437633000) }
   let time = {}
   if (startDate && endDate) {   
@@ -39,8 +40,29 @@ exports.allMeasurements = async (req, res) => {
     }
   }
 
-  measurements = await Measurements.find(options, { _id: 0 }).populate('vehicle')
-  return res.status(200).send(measurements)
+  let totalCount
+  // Pagination
+  if (size && pageNo) {
+    totalCount = await Measurements.count(options)
+    measurements = await Measurements.find(options, { _id: 0 })
+      .skip(parseInt(size) * (parseInt(pageNo) - 1))
+      .limit(parseInt(size))
+      .populate('vehicle')
+      .catch((e) => console.log('error', e))
+    const response = {
+      data: measurements,
+      pages: Math.ceil(totalCount / size),
+      current: Number(pageNo)
+    }
+    return res.status(200).send(response)
+  } else {
+      measurements = await Measurements
+        .find(options, { _id: 0 })
+        .populate('vehicle')
+        .catch((e) => console.log('error:', e))
+
+      return res.status(200).send(measurements)
+  }
 }
 
 exports.statistics = async (req, res) => {
