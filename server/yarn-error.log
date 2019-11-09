@@ -1,5 +1,5 @@
 Arguments: 
-  /home/nick/.nvm/versions/node/v11.15.0/bin/node /home/nick/.nvm/versions/node/v11.15.0/bin/yarn
+  /home/nick/.nvm/versions/node/v11.15.0/bin/node /home/nick/.nvm/versions/node/v11.15.0/bin/yarn remove http
 
 PATH: 
   /home/nick/.nvm/versions/node/v11.15.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -31,7 +31,8 @@ npm manifest:
       "dotenv": "^8.2.0",
       "express": "^4.17.1",
       "mongoose": "^5.7.7",
-      "nats": "^1.0.1"
+      "nats": "^1.0.1",
+      "ws": "^7.2.0"
     },
     "devDependencies": {
       "eslint": "^6.6.0",
@@ -212,6 +213,11 @@ Lockfile:
     version "1.0.3"
     resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.3.tgz#b727dbf87d7651602f06f4d4ac387f47d91b0cbf"
     integrity sha512-z/WhQ5FPySLdvREByI2vZiTWwCnF0moMJ1hK9YQwDTHKh6I7/uSckMetoRGb5UBZPC1z0jlw+n/XCgjeH7y1AQ==
+  
+  async-limiter@^1.0.0:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
+    integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
   
   atob@^2.1.1:
     version "2.1.2"
@@ -1279,6 +1285,11 @@ Lockfile:
       setprototypeof "1.1.1"
       statuses ">= 1.5.0 < 2"
       toidentifier "1.0.0"
+  
+  http@^0.0.0:
+    version "0.0.0"
+    resolved "https://registry.yarnpkg.com/http/-/http-0.0.0.tgz#86e6326d29c5d039de9fac584a45689f929f4f72"
+    integrity sha1-huYybSnF0Dnen6xYSkVon5KfT3I=
   
   iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
     version "0.4.24"
@@ -3159,6 +3170,13 @@ Lockfile:
     integrity sha512-/lg70HAjtkUgWPVZhZcm+T4hkL8Zbtp1nFNOn3lRrxnlv50SRBv7cR7RqR+GMsd3hUXy9hWBo4CHTbFTcOYwig==
     dependencies:
       mkdirp "^0.5.1"
+  
+  ws@^7.2.0:
+    version "7.2.0"
+    resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.0.tgz#422eda8c02a4b5dba7744ba66eebbd84bcef0ec7"
+    integrity sha512-+SqNqFbwTm/0DC18KYzIsMTnEWpLwJsiasW/O17la4iDRRIO9uaHbvKiAS3AHgTiuuWerK/brj4O6MYZkei9xg==
+    dependencies:
+      async-limiter "^1.0.0"
   
   xdg-basedir@^3.0.0:
     version "3.0.0"

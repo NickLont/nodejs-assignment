@@ -3,13 +3,13 @@ const app = express()
 const NATS = require('nats')
 const nats = NATS.connect('nats:4222')
 const mongoose = require('mongoose')
+const SocketServer = require('ws').Server;
 require('dotenv').config({ path: '../' })
 
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
-const vehiclesRoutes = require('./routes/vehicles')
-const measurementsRoutes = require('./routes/measurements')
-const webSocketRoutes = require('./routes/webSocket')
+
+const port = process.env.PORT || 3000
 
 // Connecting to the MongoDB database service with retry in case of first connection failure
 const connectWithRetry = () => (
@@ -88,9 +88,32 @@ app.use((req, res, next) => {
   next()
 })
 
-// add different routes
-app.use('/vehicles', vehiclesRoutes)
-app.use('/measurements', measurementsRoutes)
-app.use('/websocket', webSocketRoutes)
+const server = app.listen(port, () => console.log(`Listening to ${port}`))
+
+const wss = new SocketServer({ server });
+
+//init Websocket ws and handle incoming connect requests
+wss.on('connection', connection = (ws) => {
+  console.log("connection ...")
+  //on connect message
+  ws.on('message', incoming = (message) => {
+      console.log('received: ', message)
+      ws.send('message back: ' + message)
+  })
+  // when nats receives a messaage, broadcast it
+  nats.subscribe('vehicle.*', async (msg, subject, sid) => {
+    const sidArray = sid.split('vehicle.')
+    const vehicleName = (sidArray.length > 0 ? sidArray[1] : '')
+    const parsedMeasurements = JSON.parse(msg)
+
+    if (parsedMeasurements.gps) {
+      parsedMeasurements.gps = parsedMeasurements.gps.split('|') // changing shape from "52.09281539916992|5.114230155944824" to [ '52.09281539916992', '5.114230155944824' ]
+      parsedMeasurements.vehicle = vehicleName
+    }
+    ws.send(JSON.stringify(parsedMeasurements))
+  })
+
+  ws.send('message from server at: ' + new Date())
+})
 
 module.exports = app

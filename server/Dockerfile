@@ -19,7 +19,6 @@ COPY --chown=node:node . .
 ## Set environment to 'development'
 ENV NODE_ENV development
 
-RUN echo "Oh dang look at that $some_variable_name"
 ## Allow PORT to be publically available
 EXPOSE 3010
 

@@ -1,9 +1,11 @@
 const app = require('./app')
-
-const port = process.env.PORT || 3000
+const vehiclesRoutes = require('./routes/vehicles')
+const measurementsRoutes = require('./routes/measurements')
 
 app.get('/', (req, res) => {
   res.send('Hello World')
 })
 
-app.listen(port, () => console.log(`Listening to ${port}`))
+// add different routes
+app.use('/vehicles', vehiclesRoutes)
+app.use('/measurements', measurementsRoutes)
