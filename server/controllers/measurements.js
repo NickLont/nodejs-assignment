@@ -55,7 +55,6 @@ exports.allMeasurements = async (req, res) => {
 
 exports.statistics = async (req, res) => {
   const { vehicleId, vehicleName, startDate, endDate } = req.query
-  let measurements
   let vehicle
 
   if (!vehicleId && !vehicleName) return res.status(401).send('Please provide a vehicleId or a vehicleName')
@@ -72,14 +71,30 @@ exports.statistics = async (req, res) => {
     if (!vehicle) return res.status(401).send('No such vehicle name found')
   }
 
-  // const match = 
-  measurements = Measurements.aggregate([
+  // Conditionally creating [
+          // { vehicle: mongoose.Types.ObjectId(String(vehicle._id)) },
+          // { time: {$gte: new Date(Number(startDate)), $lt: new Date(Number(endDate))}},
+        // ]
+  const match = [{ vehicle: mongoose.Types.ObjectId(String(vehicle._id)) }]
+
+  if (startDate && endDate) {   
+    if (!helpers.isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
+    if (!helpers.isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
+    match.push({ time: {$gte: new Date(Number(startDate)), $lt: new Date(Number(endDate))}})
+  }
+  if (startDate && !endDate) {   
+    if (!helpers.isValidDate(Number(startDate))) return res.status(401).send('Invalid startDate')
+    match.push({ time: {$gte: new Date(Number(startDate))}})
+  }
+  if (!startDate && endDate) {   
+    if (!helpers.isValidDate(Number(endDate))) return res.status(401).send('Invalid endDate')
+    match.push({ time: {$lt: new Date(Number(endDate))}})
+  }
+  
+  Measurements.aggregate([
     {
       $match: {
-        "$and": [
-          { vehicle: mongoose.Types.ObjectId(String(vehicle._id)) },
-          { time: {$gte: new Date(Number(startDate)), $lt: new Date(Number(endDate))}},
-        ]
+        "$and": match
       }
     }, // filter inside Measurements collection
     {

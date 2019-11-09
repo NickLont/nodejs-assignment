@@ -9,8 +9,18 @@ const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
 const vehiclesRoutes = require('./routes/vehicles')
 const measurementsRoutes = require('./routes/measurements')
+const webSocketRoutes = require('./routes/webSocket')
 
-mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }) // Connecting to the MongoDB database service
+// Connecting to the MongoDB database service with retry in case of first connection failure
+const connectWithRetry = () => (
+  mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }, (err) => {
+    if (err) {
+      console.error('Failed to connect to mongo on startup - retrying in 1 sec', err)
+      setTimeout(connectWithRetry, 1000)
+    }
+  })
+)
+connectWithRetry();
 mongoose.Promise = global.Promise // Tell Mongoose to use ES6 promises
 mongoose.connection.on('connected', () => {
   console.log('Connected to database')
@@ -81,5 +91,6 @@ app.use((req, res, next) => {
 // add different routes
 app.use('/vehicles', vehiclesRoutes)
 app.use('/measurements', measurementsRoutes)
+app.use('/websocket', webSocketRoutes)
 
 module.exports = app
