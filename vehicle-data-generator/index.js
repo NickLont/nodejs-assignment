@@ -76,11 +76,11 @@ console.log('Henk checks in on test-bus-1 starting his shift...')
 readOutLoud('test-bus-1')
   .once('finish', () => {
     console.log('henk is on the last stop and he is taking a cigarrete while waiting for his next trip')
-    setTimeout(() => readOutLoud2('test-bus-1'), 3000)
+    setTimeout(() => readOutLoudReverse('test-bus-1'), 3000)
   })
 // To make your presentation interesting maybe you can make henk drive again in reverse
 
-const readOutLoud2 = (vehicleName) => {
+const readOutLoudReverse = (vehicleName) => {
   console.log('And now he is going in reverse!')
   results.forEach((result, i) => {
     setTimeout(publishResult, Math.ceil(Math.random() * 150 * i), result, vehicleName, i)

@@ -29,6 +29,13 @@ mongoose.connection.on('error', (err) => {
   console.error(`🚫 → ${err.message}`)
 })
 
+nats.on('connect', (c) => {
+  console.log('Connected to nats')
+})
+nats.on('error', (err) => {
+  console.log('Failed to connect to nats')
+})
+
 // Subscribe to NATS and watch for keys starting with 'vehicle.'
 // function arguments:
 // - msg is the payload for the message
