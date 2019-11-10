@@ -31,4 +31,17 @@ services:
     restart: always
     links:
       - database
+      - nats  
+  incidents_server:
+    build:
+      context: ./incidents-server
+      dockerfile: Dockerfile
+    volumes:
+      - ./incidents-server:/incidents-server
+      - /incidents-server/node_modules
+    env_file: .env
+    ports:
+      - "${INCIDENTS_PORT}:${INCIDENTS_PORT}"
+    restart: always
+    links:
       - nats

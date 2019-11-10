@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
 const NATS = require('nats')
-const nats = NATS.connect('localhost:4222')
-// const nats = NATS.connect('nats:4222')
+// const nats = NATS.connect('localhost:4222')
+const nats = NATS.connect('nats:4222')
 const mongoose = require('mongoose')
 require('dotenv').config({ path: '../.env' })
 
