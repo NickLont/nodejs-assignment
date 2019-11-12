@@ -1,13 +1,14 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-require('dotenv').config({ path: '../' })
+require('dotenv').config({ path: '../.env' })
 const vehiclesRoutes = require('./routes/vehicles')
 const measurementsRoutes = require('./routes/measurements')
 
 // Connecting to the MongoDB database service with retry in case of first connection failure
 const connectWithRetry = () => (
-  mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }, (err) => {
+  mongoose.connect('mongodb://nick:1234@localhost:27017/Vehicle', { useNewUrlParser: true }, (err) => { // TODO change back when tests are done
+  // mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }, (err) => { 
     if (err) {
       console.error('Failed to connect to mongo on startup - retrying in 1 sec', err)
       setTimeout(connectWithRetry, 1000)

@@ -2,7 +2,8 @@ const app = require('./app')
 const SocketServer = require('ws').Server;
 const port = process.env.PORT || 3000
 const NATS = require('nats')
-const nats = NATS.connect('nats:4222')
+const nats = NATS.connect('localhost:4222')
+// const nats = NATS.connect('nats:4222') // TODO change back when tests are done
 
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
