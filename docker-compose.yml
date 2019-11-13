@@ -18,20 +18,20 @@ services:
     container_name: 'nats_container'
     ports:
       - "4222:4222"
-  # server:
-  #   build:
-  #     context: ./server
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./server:/server
-  #     - /server/node_modules
-  #   env_file: .env
-  #   ports:
-  #     - "${PORT}:${PORT}"
-  #   restart: always
-  #   links:
-  #     - database
-  #     - nats  
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    env_file: .env
+    ports:
+      - "${PORT}:${PORT}"
+    restart: always
+    links:
+      - database
+      - nats
   incidents_server:
     build:
       context: ./incidents-server

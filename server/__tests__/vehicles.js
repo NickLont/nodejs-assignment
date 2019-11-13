@@ -6,11 +6,20 @@ const dropAllCollections = require('../helpers').dropAllCollections
 
 const Vehicle = require('../models/vehicle')
 
+beforeAll(async () => {
+  process.env.ENVIRONMENT = 'testing'
+  const url = process.env.MLAB_TESTING_DATABASE_URL
+  await mongoose.connect(url, { useNewUrlParser: true })
+})
+
+// Drop all collections after tests are done
+afterAll(async () => {
+  await dropAllCollections(mongoose)
+  // Closes the Mongoose connection
+  await mongoose.connection.close()
+})
+
 describe('Vehicles endpoints tests', () => {
-  beforeAll(async () => {
-    const url = process.env.MLAB_TESTING_DATABASE_URL
-    await mongoose.connect(url, { useNewUrlParser: true })
-  })
 
   it('Testing to see if server is up', async (done) => {
     const res = await request.get('/')
@@ -27,12 +36,5 @@ describe('Vehicles endpoints tests', () => {
     expect(res.status).toBe(200)
     expect(JSON.stringify(res.body)).toBe(JSON.stringify(vehicles)) // JSON.stringify was used because res.send() automatically casts mongos ._id from hex to string
     done()
-  })
-
-  // Drop all collections after tests are done
-  afterAll(async () => {
-    await dropAllCollections(mongoose)
-    // Closes the Mongoose connection
-    await mongoose.connection.close()
   })
 })

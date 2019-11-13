@@ -1,9 +1,8 @@
 const app = require('./app')
-const SocketServer = require('ws').Server;
+const SocketServer = require('ws').Server
 const port = process.env.PORT || 3000
 const NATS = require('nats')
-const nats = NATS.connect('localhost:4222')
-// const nats = NATS.connect('nats:4222') // TODO change back when tests are done
+const nats = NATS.connect('nats:4222')
 
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
@@ -68,15 +67,15 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
 
 const server = app.listen(port, () => console.log(`Listening to ${port}`))
 
-const wss = new SocketServer({ server });
+const wss = new SocketServer({ server })
 
-//init Websocket ws and handle incoming connect requests
+// init Websocket ws and handle incoming connect requests
 wss.on('connection', connection = (ws) => {
-  console.log("connection ...")
-  //on connect message
+  console.log('connection ...')
+  // on connect message
   ws.on('message', incoming = (message) => {
-      console.log('received: ', message)
-      ws.send('message back: ' + message)
+    console.log('received: ', message)
+    ws.send('message back: ' + message)
   })
   // when nats receives a messaage, broadcast it
   nats.subscribe('vehicle.*', async (msg, subject, sid) => {

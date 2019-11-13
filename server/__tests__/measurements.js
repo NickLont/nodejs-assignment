@@ -50,28 +50,40 @@ const measurementsCollection = [
   }
 ]
 
-describe('Measurements endpoints tests', () => {
-  beforeAll(async () => {
-    const url = process.env.MLAB_TESTING_DATABASE_URL
-    await mongoose.connect(url, { useNewUrlParser: true })
-    const vehicle = new Vehicle({ name: 'test-bus-1' })
-    await vehicle.save()
-    measurementsCollection.map(
-      async m => {
-        const measurements = new Measurements({
-          time: m.time,
-          energy: m.energy,
-          gps: m.gps,
-          odo: m.odo,
-          speed: m.speed,
-          soc: m.soc,
-          vehicle: vehicle
-        })
-        await measurements.save()
-      }
-    )
-  })
+beforeEach(() => {
+  process.env.ENVIRONMENT = 'testing'
+})
 
+beforeEach(async (done) => { // Would prefer to use beforeAll but it sometimes fails
+  const url = process.env.MLAB_TESTING_DATABASE_URL
+  await mongoose.connect(url, { useNewUrlParser: true })
+  const vehicle = new Vehicle({ name: 'test-bus-1' })
+  await vehicle.save()
+  measurementsCollection.map(
+    async m => {
+      const measurements = new Measurements({
+        time: m.time,
+        energy: m.energy,
+        gps: m.gps,
+        odo: m.odo,
+        speed: m.speed,
+        soc: m.soc,
+        vehicle: vehicle
+      })
+      await measurements.save()
+    }
+  )
+  done()
+})
+
+// Drop all collections after tests are done
+afterAll(async () => {
+  await dropAllCollections(mongoose)
+  // Closes the Mongoose connection
+  await mongoose.connection.close()
+})
+
+describe('Measurements endpoints tests', () => {
   it('Testing to see if server is up', async (done) => {
     const res = await request.get('/')
     expect(res.status).toBe(200)
@@ -196,12 +208,5 @@ describe('Measurements endpoints tests', () => {
       metric: 'Speed'
     }]))
     done()
-  })
-
-  // Drop all collections after tests are done
-  afterAll(async () => {
-    await dropAllCollections(mongoose)
-    // Closes the Mongoose connection
-    await mongoose.connection.close()
   })
 })
