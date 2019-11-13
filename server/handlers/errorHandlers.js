@@ -17,10 +17,10 @@ exports.validateVehicle = async (req, res, vehicleModel, isValidId) => {
 
     if (!vehicleId && !vehicleName) return res.status(401).send('Please provide a vehicleId or a vehicleName')
     if (vehicleId && vehicleName) return res.status(401).send('Please provide one of vehicleId or vehicleName')
-  
+
     if (vehicleId) {
       if (!isValidId(vehicleId)) return res.status(401).send('Invalid ID')
-  
+
       vehicle = await vehicleModel.findById(vehicleId)
       if (!vehicle) return res.status(401).send('No such vehicle ID found')
     }
@@ -28,5 +28,5 @@ exports.validateVehicle = async (req, res, vehicleModel, isValidId) => {
       vehicle = await vehicleModel.findOne({ name: vehicleName })
       if (!vehicle) return res.status(401).send('No such vehicle name found')
     }
-    return vehicle
+    if (vehicleName || vehicleId) return vehicle
 }
