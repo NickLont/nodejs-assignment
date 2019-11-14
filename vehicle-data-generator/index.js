@@ -88,5 +88,5 @@ const readOutLoudReverse = (vehicleName) => {
 }
 const publishResult = (result, vehicleName, i) => {
   if ((i % 100) === 0 && i !== 0) { console.log(`vehicle ${vehicleName} sent have sent ${i} messages`) }
-  nats.publish(`vehicle.test-bus-1`, result)
+  nats.publish('vehicle.test-bus-1', result)
 }

@@ -71,7 +71,7 @@ const wss = new SocketServer({ server })
 
 // init Websocket ws and handle incoming connect requests
 wss.on('connection', connection = (ws) => {
-  console.log('connection ...')
+  console.log('WebSocket connection ...')
   // on connect message
   ws.on('message', incoming = (message) => {
     console.log('received: ', message)

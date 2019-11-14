@@ -60,7 +60,7 @@ exports.allMeasurements = async (req, res) => {
       measurements = await Measurements
         .find(options, { _id: 0 })
         .populate('vehicle')
-      .catch((e) => console.log('error:', e))
+        .catch((e) => console.log('error:', e))
       const response = {
         data: measurements
       }
@@ -71,9 +71,7 @@ exports.allMeasurements = async (req, res) => {
 
 exports.statistics = async (req, res) => {
   const { startDate, endDate } = req.query
-  let vehicle
-
-  vehicle = await validateVehicle(req, res, Vehicle, isValidId)
+  let vehicle = await validateVehicle(req, res, Vehicle, isValidId)
 
   // Conditionally creating [
   // { vehicle: mongoose.Types.ObjectId(String(vehicle._id)) },

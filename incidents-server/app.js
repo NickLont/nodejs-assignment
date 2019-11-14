@@ -21,7 +21,7 @@ const connectWithRetry = () => (
     }
   })
 )
-connectWithRetry();
+connectWithRetry()
 mongoose.Promise = global.Promise // Tell Mongoose to use ES6 promises
 mongoose.connection.on('connected', () => {
   console.log('Connected to incidents database')
@@ -93,7 +93,7 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
       await measurements.save().catch(e => {
         console.log(`Error saving measurements: ${measurements}`)
       })
-      
+
       const incident = new Incident({
         error,
         measurements
@@ -114,6 +114,5 @@ app.use((req, res, next) => {
 })
 
 app.listen(port, () => console.log(`Listening to ${port}`))
-
 
 module.exports = app
