@@ -45,3 +45,16 @@ services:
     restart: always
     links:
       - nats
+  front-end:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    volumes:
+      - ./front-end:/front-end
+      - /front-end/node_modules
+    ports:
+      - "3010:3010"
+    restart: always
+    links:
+      - server
+

@@ -7,7 +7,7 @@
     transform: rotate(-45deg);
     left: 50%;
     top: 50%;
-    margin: -20px 0 0 -20px;
+    margin: -44px 0 0 -13px;
 
     &:after {
         content: "";
@@ -41,7 +41,7 @@
         position: absolute;
         left: 50%;
         top: 50%;
-        margin: 11px 0px 0px -12px;
+        margin: -6px 0px 0px -5px;
         transform: rotateX(55deg);
         z-index: -2;
 
@@ -51,7 +51,7 @@
             height: 40px;
             width: 40px;
             position: absolute;
-            margin: -13px 0 0 -13px;
+            margin: -6px 0 0 -13px;
             animation: pulsate 1s ease-out;
             animation-iteration-count: infinite;
             opacity: 0;

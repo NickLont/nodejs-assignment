@@ -2,13 +2,13 @@
 FROM node:11
 
 ## Creating base dir
-RUN mkdir -p /incidents-server
+RUN mkdir -p /front-end
 
-## Globally install nodemon inside container
-RUN npm install nodemon yarn -g
+## Globally install yarn inside container
+RUN npm install yarn -g
 
 ## Set base dir as working dir for Docker
-WORKDIR /incidents-server
+WORKDIR /front-end
 
 ## Copy and install packages
 COPY --chown=node:node package.json .
@@ -20,7 +20,7 @@ COPY --chown=node:node . .
 ENV NODE_ENV development
 
 ## Allow PORT to be publically available
-EXPOSE 3003
+EXPOSE 3011
 
 ## run the application
 CMD ["yarn", "start"]

@@ -20,7 +20,7 @@ COPY --chown=node:node . .
 ENV NODE_ENV development
 
 ## Allow PORT to be publically available
-EXPOSE 3010
+EXPOSE 3002
 
 ## run the application
 CMD ["yarn", "start-server"]
