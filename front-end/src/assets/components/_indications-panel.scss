@@ -1,0 +1,22 @@
+.c-indications-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__top-container {
+        display: flex;
+    }
+    
+    &__right-container {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 30px;
+    }
+
+    &__left-container {
+        display: flex;
+        flex: 1;
+    }
+}

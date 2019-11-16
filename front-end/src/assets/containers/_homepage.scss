@@ -1,3 +1,17 @@
 .c-homepage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
 
+    &__container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        width: 70vw;
+        border: 1px solid $color-grey;
+        padding: 20px;
+        margin: 20px;
+        box-sizing: border-box;
+    }
 }

@@ -1,0 +1,15 @@
+.c-text-indication {
+    display: block;
+    margin: 20px 0;
+    text-align: center;
+
+    &__indication {
+        font-size: 14px;
+        margin: 8px 0;
+    }
+
+    &__value {
+        margin: 0;
+        font-size: 16px;
+    }
+}
