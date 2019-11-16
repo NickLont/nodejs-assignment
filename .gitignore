@@ -1,6 +1,8 @@
 mongoDB/mongo-volume
 server/node_modules/
 incidents-server/node_modules/
+front-end/node_modules/
 .env
+front-end/.env
 .DS_Store
 .idea/

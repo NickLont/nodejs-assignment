@@ -26,7 +26,7 @@ class MapIndication extends Component {
         return (
             <div style={{ height: '40vh', width: '100%' }}>
             <GoogleMapReact
-              bootstrapURLKeys={{ key: 'AIzaSyAc_9XrMawnXc9eagPOJGSd6FcEMlQ40UE' }} // TODO put that in the .env file
+              bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_KEY }}
               defaultCenter={defaultCenter}
               center={center}
               defaultZoom={zoom}
