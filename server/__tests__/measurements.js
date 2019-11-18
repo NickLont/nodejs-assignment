@@ -76,6 +76,11 @@ beforeEach(async (done) => { // Would prefer to use beforeAll but it sometimes f
   done()
 })
 
+afterEach(async () => {
+  await Vehicle.deleteMany({})
+  await Measurements.deleteMany({})
+})
+
 // Drop all collections after tests are done
 afterAll(async () => {
   await dropAllCollections(mongoose)
