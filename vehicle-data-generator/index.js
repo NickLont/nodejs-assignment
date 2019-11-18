@@ -80,13 +80,14 @@ readOutLoud('test-bus-1')
   })
 // To make your presentation interesting maybe you can make henk drive again in reverse
 
-const readOutLoudReverse = (vehicleName) => {
+const readOutLoudReverse = async (vehicleName) => {
   console.log('And now he is going in reverse!')
-  results.forEach((result, i) => {
-    setTimeout(publishResult, Math.ceil(Math.random() * 150 * i), result, vehicleName, i)
-  })
-}
-const publishResult = (result, vehicleName, i) => {
-  if ((i % 100) === 0 && i !== 0) { console.log(`vehicle ${vehicleName} sent have sent ${i} messages`) }
-  nats.publish('vehicle.test-bus-1', result)
+  let i = 0
+  results.reverse()
+  for (result of results) {
+    i++
+    if ((i % 100) === 0 && i !==0) { console.log(`vehicle.test-bus-1 sent have sent ${i} messages`) }
+    await new Promise((resolve) => { setTimeout(resolve, Math.ceil(Math.random() * 150)) });
+    nats.publish('vehicle.test-bus-1', result)    
+  }
 }
