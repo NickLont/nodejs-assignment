@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
-// Clarification: are all the fields required?
+// Assumption: all the fields are required
 const measurement = mongoose.Schema({
   time: { type: Date, required: true },
   energy: { type: Number, required: true },
-  gps: { type: [String], required: true },
+  gps: { type: [Number], required: true },
   odo: { type: Number, required: true },
   speed: { type: Number, required: true },
   soc: { type: Number, required: true },

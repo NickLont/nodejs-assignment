@@ -11,7 +11,7 @@ nats.on('connect', (c) => {
   console.log('Connected to nats')
 })
 nats.on('error', (err) => {
-  console.log('Failed to connect to nats')
+  console.log('Failed to connect to nats: ', err)
 })
 // Subscribe to NATS and watch for keys starting with 'vehicle.'
 // function arguments:
@@ -26,7 +26,7 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
   const parsedMeasurements = JSON.parse(msg)
 
   if (parsedMeasurements.gps) {
-    parsedMeasurements.gps = parsedMeasurements.gps.split('|') // changing shape from "52.09281539916992|5.114230155944824" to [ '52.09281539916992', '5.114230155944824' ]
+    parsedMeasurements.gps = parsedMeasurements.gps.split('|').map(unit => Number(unit)) // changing shape from "==52.09281539916992|5.114230155944824" to [ 52.09281539916992, 5.114230155944824 ]
   }
 
   const {
@@ -71,7 +71,7 @@ const wss = new SocketServer({ server })
 
 // init Websocket ws and handle incoming connect requests
 wss.on('connection', connection = (ws) => {
-  console.log('WebSocket connection ...')
+  console.log('WebSocket connection open ...')
   // on connect message
   ws.on('message', incoming = (message) => {
     console.log('received: ', message)
@@ -84,7 +84,7 @@ wss.on('connection', connection = (ws) => {
     const parsedMeasurements = JSON.parse(msg)
 
     if (parsedMeasurements.gps) {
-      parsedMeasurements.gps = parsedMeasurements.gps.split('|') // changing shape from "52.09281539916992|5.114230155944824" to [ '52.09281539916992', '5.114230155944824' ]
+      parsedMeasurements.gps = parsedMeasurements.gps.split('|').map(unit => Number(unit)) // changing shape from "52.09281539916992|5.114230155944824" to [ 52.09281539916992, 5.114230155944824 ]
       parsedMeasurements.vehicle = vehicleName
     }
     ws.send(JSON.stringify(parsedMeasurements))

@@ -16,8 +16,8 @@ class IndicationsPanel extends Component {
       const { currentMeasurements } = this.props
       const energy = currentMeasurements.energy ? currentMeasurements.energy.toFixed(2) : 0
       const odo = currentMeasurements.odo ? currentMeasurements.odo.toFixed(2) : 0
-      const lat = (currentMeasurements.gps && currentMeasurements.gps.length > 1) ? Number(currentMeasurements.gps[0]) : 0
-      const lon = (currentMeasurements.gps && currentMeasurements.gps.length > 1) ? Number(currentMeasurements.gps[1]) : 0
+      const lat = (currentMeasurements.gps && currentMeasurements.gps.length > 1) ? currentMeasurements.gps[0] : 0
+      const lon = (currentMeasurements.gps && currentMeasurements.gps.length > 1) ? currentMeasurements.gps[1] : 0
       const center = (lat !== 0 && lon !== 0) ? { lat: lat, lng: lon } : undefined
 
       return (
