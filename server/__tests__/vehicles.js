@@ -3,13 +3,25 @@ const supertest = require('supertest')
 const request = supertest(app)
 const mongoose = require('mongoose')
 const dropAllCollections = require('../helpers').dropAllCollections
+const { MongoMemoryServer } = require('mongodb-memory-server')
+
+const mongod = new MongoMemoryServer()
 
 const Vehicle = require('../models/vehicle')
 
-beforeAll(async () => {
+beforeAll(async () => { // Connecting to the in-memory database
   process.env.ENVIRONMENT = 'testing'
-  const url = process.env.MLAB_TESTING_DATABASE_URL
-  await mongoose.connect(url, { useNewUrlParser: true })
+  const uri = await mongod.getConnectionString()
+
+  const mongooseOpts = {
+    useNewUrlParser: true,
+    autoReconnect: true,
+    useUnifiedTopology: true,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 1000
+  }
+
+  await mongoose.connect(uri, mongooseOpts)
 })
 
 // Drop all collections after tests are done

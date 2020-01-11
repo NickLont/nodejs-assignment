@@ -2,59 +2,29 @@ const app = require('../app') // Link to your server file
 const supertest = require('supertest')
 const request = supertest(app)
 const mongoose = require('mongoose')
+const { MongoMemoryServer } = require('mongodb-memory-server')
 const dropAllCollections = require('../helpers').dropAllCollections
+const measurementsCollection = require('../constants').measurementsCollection
+
+const mongod = new MongoMemoryServer()
 
 const Measurements = require('../models/measurements')
 const Vehicle = require('../models/vehicle')
 
-const measurementsCollection = [
-  {
-    time: 1511436382000,
-    energy: 53.272,
-    gps: ['52.08948516845703', '5.10642147064209'],
-    odo: 88526.46,
-    speed: 7,
-    soc: 72.8
-  },
-  {
-    time: 1511436383000,
-    energy: 53.272,
-    gps: ['52.08948516845703', '5.10642147064209'],
-    odo: 88526.461,
-    speed: 5,
-    soc: 72.8
-  },
-  {
-    time: 1511436384000,
-    energy: 53.272,
-    gps: ['52.08948516845703', '5.10642147064209'],
-    odo: 88526.463,
-    speed: 5,
-    soc: 72.8
-  },
-  {
-    time: 1511436385000,
-    energy: 53.272,
-    gps: ['52.08953857421875', '5.1063947677612305'],
-    odo: 88526.464,
-    speed: 6,
-    soc: 72.8
-  },
-  {
-    time: 1511436386000,
-    energy: 53.272,
-    gps: ['52.08953857421875', '5.1063947677612305'],
-    odo: 88526.466,
-    speed: 7,
-    soc: 72.8
-  }
-]
-
 describe('Measurements endpoints tests', () => {
-  beforeAll(async () => {
+  beforeAll(async () => { // Connecting to the in-memory database
     process.env.ENVIRONMENT = 'testing'
-    const url = process.env.MLAB_TESTING_DATABASE_URL
-    await mongoose.connect(url, { useNewUrlParser: true })
+    const uri = await mongod.getConnectionString()
+
+    const mongooseOpts = {
+      useNewUrlParser: true,
+      autoReconnect: true,
+      useUnifiedTopology: true,
+      reconnectTries: Number.MAX_VALUE,
+      reconnectInterval: 1000
+    }
+
+    await mongoose.connect(uri, mongooseOpts)
   })
   beforeEach(async (done) => {
     const vehicle = new Vehicle({ name: 'test-bus-1' })

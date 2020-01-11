@@ -7,7 +7,7 @@ const measurementsRoutes = require('./routes/measurements')
 
 // Connecting to the MongoDB database service with retry in case of first connection failure
 const connectWithRetry = () => (
-  mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true }, (err) => {
+  mongoose.connect(process.env.MONGO_DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     if (err) {
       if (process.env.ENVIRONMENT !== 'testing') console.error('Failed to connect to mongo on startup - retrying in 1 sec', err)
       setTimeout(connectWithRetry, 1000)
