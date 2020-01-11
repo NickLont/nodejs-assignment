@@ -11,6 +11,7 @@ const Vehicle = require('../models/vehicle')
 
 beforeAll(async () => { // Connecting to the in-memory database
   process.env.ENVIRONMENT = 'testing'
+  jest.setTimeout(10000)
   const uri = await mongod.getConnectionString()
 
   const mongooseOpts = {

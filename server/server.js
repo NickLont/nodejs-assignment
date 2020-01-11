@@ -65,7 +65,7 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
   }
 })
 
-const server = app.listen(port, () => console.log(`Listening to ${port}`))
+const server = app.listen(port, () => console.debug(`Listening to ${port}`))
 
 const wss = new SocketServer({ server })
 
