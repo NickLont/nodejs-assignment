@@ -14,7 +14,7 @@ const port = process.env.INCIDENTS_PORT || 3001
 
 // Connecting to the MongoDB database service with retry in case of first connection failure
 const connectWithRetry = () => (
-  mongoose.connect(process.env.MLAB_DATABASE_URL, { useNewUrlParser: true }, (err) => {
+  mongoose.connect(process.env.MLAB_DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     if (err) {
       console.error('Failed to connect to mongo on startup - retrying in 1 sec', err)
       setTimeout(connectWithRetry, 1000)
