@@ -70,10 +70,10 @@ const server = app.listen(port, () => console.log(`Listening to ${port}`))
 const wss = new SocketServer({ server })
 
 // init Websocket ws and handle incoming connect requests
-wss.on('connection', connection = (ws) => {
+wss.on('connection', (ws) => {
   console.log('WebSocket connection open ...')
   // on connect message
-  ws.on('message', incoming = (message) => {
+  ws.on('message', (message) => {
     console.log('received: ', message)
     ws.send('message back: ' + message)
   })
@@ -92,7 +92,7 @@ wss.on('connection', connection = (ws) => {
 
   ws.send('message from server at: ' + new Date())
   // Unsubscibing from NATS if the connection closes to prevent memory leaks
-  ws.on('close', connection = () => {
+  ws.on('close', () => {
     nats.unsubscribe(sid)
     console.log('connection closed')
   })
