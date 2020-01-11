@@ -7,7 +7,7 @@ const nats = NATS.connect('nats:4222')
 const Measurements = require('./models/measurements')
 const Vehicle = require('./models/vehicle')
 
-nats.on('connect', (c) => {
+nats.on('connect', (msg) => {
   console.log('Connected to nats')
 })
 nats.on('error', (err) => {
@@ -26,7 +26,7 @@ nats.subscribe('vehicle.*', async (msg, subject, sid) => {
   const parsedMeasurements = JSON.parse(msg)
 
   if (parsedMeasurements.gps) {
-    parsedMeasurements.gps = parsedMeasurements.gps.split('|').map(unit => Number(unit)) // changing shape from "==52.09281539916992|5.114230155944824" to [ 52.09281539916992, 5.114230155944824 ]
+    parsedMeasurements.gps = parsedMeasurements.gps.split('|').map(unit => Number(unit)) // changing shape from "52.09281539916992|5.114230155944824" to [ 52.09281539916992, 5.114230155944824 ]
   }
 
   const {
@@ -77,8 +77,8 @@ wss.on('connection', connection = (ws) => {
     console.log('received: ', message)
     ws.send('message back: ' + message)
   })
-  // when nats receives a messaage, broadcast it
-  nats.subscribe('vehicle.*', async (msg, subject, sid) => {
+  // when nats receives a message, broadcast it
+  const sid = nats.subscribe('vehicle.*', async (msg, subject, sid) => {
     const sidArray = sid.split('vehicle.')
     const vehicleName = (sidArray.length > 0 ? sidArray[1] : '')
     const parsedMeasurements = JSON.parse(msg)
@@ -91,4 +91,9 @@ wss.on('connection', connection = (ws) => {
   })
 
   ws.send('message from server at: ' + new Date())
+  // Unsubscibing from NATS if the connection closes to prevent memory leaks
+  ws.on('close', connection = () => {
+    nats.unsubscribe(sid)
+    console.log('connection closed')
+  })
 })
