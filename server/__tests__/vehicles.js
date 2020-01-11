@@ -20,7 +20,6 @@ afterAll(async () => {
 })
 
 describe('Vehicles endpoints tests', () => {
-
   it('Testing to see if server is up', async (done) => {
     const res = await request.get('/')
     expect(res.status).toBe(200)
