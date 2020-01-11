@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class TextIndication extends Component {
+class NumericIndication extends Component {
     static propTypes = {
       indication: PropTypes.string,
       value: PropTypes.number,
@@ -25,4 +25,4 @@ class TextIndication extends Component {
     }
 }
 
-export default TextIndication
+export default NumericIndication

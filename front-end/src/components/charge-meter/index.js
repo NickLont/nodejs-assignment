@@ -4,17 +4,16 @@ import PropTypes from 'prop-types'
 
 class ChargeMeter extends Component {
     static propTypes = {
-      energy: PropTypes.number,
+      chargeLevel: PropTypes.number,
       title: PropTypes.string
     }
 
     static defaultProps = {
-      energy: 0
+      chargeLevel: 0
     }
 
     render () {
-      const { title } = this.props
-      const energy = this.props.energy.toFixed(1)
+      const { title, chargeLevel } = this.props
       return (
         <div className="c-charge-meter">
           <p>{title}</p>
@@ -24,7 +23,8 @@ class ChargeMeter extends Component {
             needleHeightRatio={0.7}
             maxSegmentLabels={4}
             segments={1000}
-            value={energy}
+            value={chargeLevel}
+            // eslint-disable-next-line
             currentValueText={'${value} %'}
             width={200}
             height={150}

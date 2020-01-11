@@ -26,6 +26,7 @@ class Speedometer extends Component {
             segments={2}
             value={speed}
             startColor={'rgb(64, 207, 49)'}
+            // eslint-disable-next-line
             currentValueText={'${value} km / h'}
             width={200}
             height={150}
