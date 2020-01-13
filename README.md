@@ -44,3 +44,7 @@ database handled by a different service. The server handling this is the `incide
 
 To run tests, inside the `/server` folder run `npm run test`. 
 This will run tests checking the servers availability and the endpoints. It uses `Jest`, `supertest` and `mongo-memory-server`
+
+#### Architecture
+
+![](https://github.com/NickLont/nodejs-assignment/blob/master/architecture.jpg)
